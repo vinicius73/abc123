@@ -2,6 +2,7 @@
 import { defineComponent, ref, computed, watchEffect } from 'vue'
 import { random, sum, reduce, shuffle, round, uniq } from 'lodash-es'
 import { mdiPlus, mdiEqual } from '@quasar/extras/mdi-v6'
+import { showConfetti } from '../lib/confetti'
 
 enum Operand {
   SUM,
@@ -23,6 +24,7 @@ const operations: Record<Operand, (vals: number[]) => number> = {
 export default defineComponent({
   name: 'Home',
   setup() {
+    const $el = ref()
     const size = ref(2)
     const input = ref<number | null>(null)
     const numbers = ref<number[]>([])
@@ -67,6 +69,7 @@ export default defineComponent({
 
     watchEffect(() => {
       if (input.value === result.value) {
+        showConfetti($el.value.$el)
         setTimeout(refresh, 3_000)
       }
     })
@@ -74,15 +77,16 @@ export default defineComponent({
     refresh()
 
     return {
+      colorStatus,
+      defineInput,
       input,
-      result,
+      mdiEqual,
+      mdiPlus,
       numbers,
       options,
+      result,
       size,
-      mdiPlus,
-      mdiEqual,
-      defineInput,
-      colorStatus
+      el: $el
     }
   }
 })
@@ -90,12 +94,14 @@ export default defineComponent({
 
 <template>
   <q-page padding>
-    <q-chip v-for="num, i in numbers" size="2.23em" :key="`num-${i}`" :icon="(i > 0 ? mdiPlus : undefined)">
-      {{ num }}
-    </q-chip>
-    <q-chip :color="colorStatus" :icon="mdiEqual" size="2.23em">
-      {{ input ?? '?' }}
-    </q-chip>
+    <div class="text-center">
+      <q-chip v-for="num, i in numbers" size="2.23em" :key="`num-${i}`" :icon="(i > 0 ? mdiPlus : undefined)">
+        {{ num }}
+      </q-chip>
+      <q-chip ref="el" :color="colorStatus" :icon="mdiEqual" size="2.23em">
+        {{ input ?? '?' }}
+      </q-chip>
+    </div>
 
     <q-separator spaced="lg" />
 
