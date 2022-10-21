@@ -97,11 +97,17 @@ export default defineComponent({
 
 <template>
   <q-page padding>
-    <div class="text-center">
-      <q-chip v-for="num, i in numbers" size="2.23em" :key="`num-${i}`" :icon="(i > 0 ? mdiPlus : undefined)">
+    <div class="text-center" :class="{ 'shake animated': input && input !== result }">
+      <q-chip v-for="num, i in numbers"
+        size="2.23em"
+        :key="`num-${i}`"
+        :icon="(i > 0 ? mdiPlus : undefined)">
         {{ num }}
       </q-chip>
-      <q-chip ref="el" :color="colorStatus" :icon="mdiEqual" size="2.23em">
+      <q-chip ref="el"
+        :text-color="input ? 'white' : undefined"
+        :color="colorStatus"
+        :icon="mdiEqual" size="2.23em">
         {{ input ?? '?' }}
       </q-chip>
     </div>
@@ -109,7 +115,12 @@ export default defineComponent({
     <q-separator spaced="lg" />
 
     <q-btn-group rounded flat spread>
-      <q-btn size="2.3em" v-for="val in options" :key="`val-${val}`" :label="val" @click="defineInput(val)" />
+      <q-btn
+        v-for="val in options"
+        size="2.3em"
+        :key="`val-${val}`"
+        :label="val"
+        @click="defineInput(val)" />
     </q-btn-group>
   </q-page>
 </template>

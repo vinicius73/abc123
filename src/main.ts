@@ -6,9 +6,7 @@ import quasarIconSet from "quasar/icon-set/svg-mdi-v6";
 import "@quasar/extras/roboto-font/roboto-font.css";
 import "@quasar/extras/mdi-v6/mdi-v6.css";
 
-// A few examples for animations from Animate.css:
-// import @quasar/extras/animate/fadeIn.css
-// import @quasar/extras/animate/fadeOut.css
+import "@quasar/extras/animate/shake.css";
 
 import "quasar/src/css/index.sass";
 import Root from "./Root.vue";
