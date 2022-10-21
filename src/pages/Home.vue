@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, ref, computed, watchEffect } from 'vue'
+import { defineComponent, ref, computed, watchEffect, nextTick } from 'vue'
 import { random, sum, reduce, shuffle, round, uniq } from 'lodash-es'
 import { mdiPlus, mdiEqual } from '@quasar/extras/mdi-v6'
 import { showConfetti } from '../lib/confetti'
@@ -69,7 +69,7 @@ export default defineComponent({
 
     watchEffect(() => {
       if (input.value === result.value) {
-        showConfetti($el.value.$el)
+        nextTick(() => showConfetti($el.value.$el))
         setTimeout(refresh, 3_000)
       }
     })
