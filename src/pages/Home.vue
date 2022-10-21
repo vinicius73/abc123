@@ -3,6 +3,7 @@ import { defineComponent, ref, computed, watchEffect, nextTick } from 'vue'
 import { random, sum, reduce, shuffle, round, uniq } from 'lodash-es'
 import { mdiPlus, mdiEqual } from '@quasar/extras/mdi-v6'
 import { showConfetti } from '../lib/confetti'
+import { ringBells } from '../lib/bells'
 
 enum Operand {
   SUM,
@@ -70,6 +71,8 @@ export default defineComponent({
     watchEffect(() => {
       if (input.value === result.value) {
         nextTick(() => showConfetti($el.value.$el))
+        nextTick(ringBells)
+
         setTimeout(refresh, 3_000)
       }
     })
