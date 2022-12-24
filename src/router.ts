@@ -1,13 +1,17 @@
 import type { RouteRecordRaw } from "vue-router";
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import Home from './pages/Home.vue'
+import Math from "./pages/Math.vue";
 
 const routes: RouteRecordRaw[] = [
   {
-    path: "/",
-    name: "home",
-    component: Home,
+    path: '/',
+    redirect: '/123'
+  },
+  {
+    path: "/123",
+    name: "math",
+    component: Math,
   },
 ];
 

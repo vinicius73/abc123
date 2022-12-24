@@ -11,7 +11,7 @@
       </q-toolbar>
 
       <q-tabs align="left">
-        <q-route-tab :to="{ name: 'home' }" label="123" />
+        <q-route-tab :to="{ name: 'math' }" label="123" />
       </q-tabs>
     </q-header>
 
