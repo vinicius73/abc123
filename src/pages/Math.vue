@@ -11,9 +11,19 @@ enum Operand {
   MULTIPLY
 }
 
+enum GAME_STATE {
+  EMPTY,
+  CORRECT,
+  WRONG
+}
+
+const MIN_OPTIONS = 2
+const MAX_VALUE = 9
+const HALF_VALUE = round(9/2)
+
 const buildNumbers = (size: number): number[] => {
   return Array.from({ length: size })
-    .map(() => random(1, 9, false))
+    .map(() => random(1, MAX_VALUE, false))
 }
 
 const operations: Record<Operand, (vals: number[]) => number> = {
@@ -23,14 +33,9 @@ const operations: Record<Operand, (vals: number[]) => number> = {
   }, initial)
 }
 
-enum GAME_STATE {
-  EMPTY,
-  CORRECT,
-  WRONG
-}
 
 export default defineComponent({
-  name: 'Home',
+  name: 'Match',
   setup() {
     const $el = ref()
     const size = ref(2)
@@ -39,27 +44,6 @@ export default defineComponent({
     const tp = ref(Operand.SUM)
 
     const result = computed(() => operations[tp.value](numbers.value))
-    const colorStatus = computed(() => {
-      if (input.value === null) {
-        return 'gray'
-      }
-
-      return input.value === result.value
-        ? 'green'
-        : 'red'
-    })
-
-    const options = computed(() => {
-      const current = result.value
-      const min = round(current * (current < 5 ? .4 : .7))
-      const max = round(current * (current < 5 ? 2.50 : 1.30))
-
-      const list = Array.from({ length: 2 })
-        .map(() => random(min, max, false))
-
-      return shuffle(uniq([...list, result.value]))
-    })
-
     const STATE = computed(() => {
       if (input.value == null) {
         return GAME_STATE.EMPTY
@@ -72,6 +56,30 @@ export default defineComponent({
       return GAME_STATE.WRONG
     })
 
+    const isWrong = computed(() => STATE.value === GAME_STATE.WRONG)
+    const isEmpty = computed(() => STATE.value === GAME_STATE.EMPTY)
+
+    const colorStatus = computed(() => {
+      if (isEmpty.value) {
+        return 'gray'
+      }
+
+      return isWrong.value
+        ? 'red'
+        : 'green'
+    })
+
+    const options = computed(() => {
+      const current = result.value
+      const min = round(current * (current < HALF_VALUE ? .4 : .7))
+      const max = round(current * (current < HALF_VALUE ? 2.50 : 1.30))
+
+      const list = Array.from({ length: MIN_OPTIONS })
+        .map(() => random(min, max, false))
+
+      return shuffle(uniq([...list, result.value]))
+    })
+
     const refresh = () => {
       input.value = null
       numbers.value = buildNumbers(size.value)
@@ -82,7 +90,7 @@ export default defineComponent({
     }
 
     watchEffect(() => {
-      if (options.value.length < 2) {
+      if (options.value.length < MIN_OPTIONS) {
         refresh()
       }
     })
@@ -102,7 +110,7 @@ export default defineComponent({
         return
       }
 
-      setTimeout(refresh, 1_000)
+      setTimeout(refresh, 2_000)
       speak(`${numbers.value.join(' mais ')} não é ${input.value}, o correto é ${result.value}`)
     })
 
@@ -118,6 +126,8 @@ export default defineComponent({
       options,
       result,
       size,
+      isWrong,
+      isEmpty,
       el: $el
     }
   }
@@ -147,6 +157,7 @@ export default defineComponent({
       <q-btn
         v-for="val in options"
         size="2.3em"
+        :disabled="!isEmpty"
         :key="`val-${val}`"
         :label="val"
         @click="defineInput(val)" />
