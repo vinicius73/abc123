@@ -99,25 +99,25 @@ export default defineComponent({
 
     watchEffect(() => {
       if (STATE.value === GAME_STATE.EMPTY) {
+        speak(`Quanto é ${numbers.value.join(' mais ')}?`);
         return;
       }
 
       if (STATE.value === GAME_STATE.CORRECT) {
-        speak(`${numbers.value.join(' mais ')} é igual a ${result.value}`);
-
         nextTick(() => showConfetti($el.value.$el));
         nextTick(ringBells);
 
-        setTimeout(refresh, 3_000);
+        speak(`${numbers.value.join(' mais ')} é igual a ${result.value}`).then(
+          refresh
+        );
         return;
       }
 
-      setTimeout(refresh, 2_000);
       speak(
         `${numbers.value.join(' mais ')} não é ${input.value}, o correto é ${
           result.value
         }`
-      );
+      ).then(refresh);
     });
 
     refresh();
