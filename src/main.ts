@@ -1,26 +1,26 @@
-import { createApp } from "vue";
-import { Quasar } from "quasar";
-import quasarLang from "quasar/lang/pt-BR";
-import quasarIconSet from "quasar/icon-set/svg-mdi-v6";
+import { createApp } from 'vue';
+import { Quasar } from 'quasar';
+import quasarLang from 'quasar/lang/pt-BR';
+import quasarIconSet from 'quasar/icon-set/svg-mdi-v6';
 
-import "@quasar/extras/roboto-font/roboto-font.css";
-import "@quasar/extras/mdi-v6/mdi-v6.css";
+import '@quasar/extras/roboto-font/roboto-font.css';
+import '@quasar/extras/mdi-v6/mdi-v6.css';
 
-import "@quasar/extras/animate/shake.css";
+import '@quasar/extras/animate/shake.css';
 
-import "quasar/src/css/index.sass";
-import Root from "./Root.vue";
+import 'quasar/src/css/index.sass';
+import Root from './Root.vue';
 
-import router from './router'
+import router from './router';
 
 const app = createApp(Root);
 
 app.use(Quasar, {
-  plugins: {}, // import Quasar plugins and add here
+  plugins: {}, // Import Quasar plugins and add here
   lang: quasarLang,
   iconSet: quasarIconSet,
   /*
-  config: {
+  Config: {
     brand: {
       // primary: '#e46262',
       // ... or all other brand colors
@@ -33,5 +33,5 @@ app.use(Quasar, {
   */
 });
 
-app.use(router)
-app.mount("#app");
+app.use(router);
+app.mount('#app');

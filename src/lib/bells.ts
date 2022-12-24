@@ -1,9 +1,5 @@
-import bell from '../assets/bells.wav'
+import bell from '../assets/bells.wav';
 
-const ringBells = () => {
-  return (new Audio(bell)).play()
-}
+const ringBells = async () => new Audio(bell).play();
 
-export {
-  ringBells
-}
+export { ringBells };

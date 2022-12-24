@@ -30,15 +30,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { mdiCalculatorVariant } from '@quasar/extras/mdi-v6'
+import { defineComponent } from 'vue';
+import { mdiCalculatorVariant } from '@quasar/extras/mdi-v6';
 
 export default defineComponent({
   name: 'Root',
   setup() {
     return {
-      mdiCalculatorVariant
-    }
-  }
-})
+      mdiCalculatorVariant,
+    };
+  },
+});
 </script>

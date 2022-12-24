@@ -1,13 +1,10 @@
-import type { sources } from "party-js";
-import { confetti, variation } from "party-js";
+import type { sources } from 'party-js';
+import { confetti, variation } from 'party-js';
 
-const showConfetti = (source: sources.DynamicSourceType) => {
-  return confetti(source, {
+const showConfetti = (source: sources.DynamicSourceType) =>
+  confetti(source, {
     count: variation.range(10, 30),
     size: variation.range(0.3, 1),
   });
-};
 
-export {
-  showConfetti
-}
+export { showConfetti };

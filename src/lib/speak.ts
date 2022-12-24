@@ -6,8 +6,8 @@ const speak = async (text: string): Promise<void> => {
 
     synth.speak(utterThis);
   } catch (err) {
-    console.warn(err)
+    console.warn(err);
   }
-}
+};
 
 export { speak };
