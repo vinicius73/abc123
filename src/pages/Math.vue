@@ -4,6 +4,7 @@ import { random, sum, reduce, shuffle, round, uniq } from 'lodash-es'
 import { mdiPlus, mdiEqual } from '@quasar/extras/mdi-v6'
 import { showConfetti } from '../lib/confetti'
 import { ringBells } from '../lib/bells'
+import { speak } from '../lib/speak';
 
 enum Operand {
   SUM,
@@ -20,6 +21,12 @@ const operations: Record<Operand, (vals: number[]) => number> = {
   [Operand.MULTIPLY]: ([initial, ...vals]) => reduce(vals, (acc, val) => {
     return acc * val
   }, initial)
+}
+
+enum GAME_STATE {
+  EMPTY,
+  CORRECT,
+  WRONG
 }
 
 export default defineComponent({
@@ -53,6 +60,18 @@ export default defineComponent({
       return shuffle(uniq([...list, result.value]))
     })
 
+    const STATE = computed(() => {
+      if (input.value == null) {
+        return GAME_STATE.EMPTY
+      }
+
+      if (input.value === result.value) {
+        return GAME_STATE.CORRECT
+      }
+
+      return GAME_STATE.WRONG
+    })
+
     const refresh = () => {
       input.value = null
       numbers.value = buildNumbers(size.value)
@@ -69,12 +88,22 @@ export default defineComponent({
     })
 
     watchEffect(() => {
-      if (input.value === result.value) {
+      if (STATE.value === GAME_STATE.EMPTY) {
+        return
+      }
+
+      if (STATE.value === GAME_STATE.CORRECT) {
+        speak(`${numbers.value.join(' mais ')} é igual a ${result.value}`)
+
         nextTick(() => showConfetti($el.value.$el))
         nextTick(ringBells)
 
         setTimeout(refresh, 3_000)
+        return
       }
+
+      setTimeout(refresh, 1_000)
+      speak(`${numbers.value.join(' mais ')} não é ${input.value}, o correto é ${result.value}`)
     })
 
     refresh()
