@@ -24,6 +24,8 @@
         <q-toolbar-title>
           <div>@vinicius73</div>
         </q-toolbar-title>
+        <q-space />
+        <div>{{ appVersion }}</div>
       </q-toolbar>
     </q-footer>
   </q-layout>
@@ -33,10 +35,13 @@
 import { defineComponent } from 'vue';
 import { mdiCalculatorVariant } from '@quasar/extras/mdi-v6';
 
+const appVersion = import.meta.env.VITE_APP_VERSION;
+
 export default defineComponent({
   name: 'Root',
   setup() {
     return {
+      appVersion,
       mdiCalculatorVariant,
     };
   },

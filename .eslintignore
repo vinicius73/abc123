@@ -1,5 +1,6 @@
 dist/
 .yarn/
 public/
-
 tsconfig.node.json
+
+*.svg
