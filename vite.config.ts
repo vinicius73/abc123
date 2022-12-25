@@ -24,6 +24,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       workbox: {
         cacheId: `abc123@${version}`,
+        skipWaiting: true,
       },
       manifest: {
         name: 'ABC123 - Números e alfabeto',

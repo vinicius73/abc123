@@ -28,17 +28,23 @@
         <div>{{ appVersion }}</div>
       </q-toolbar>
     </q-footer>
+    <ReloadPrompt />
   </q-layout>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import ReloadPrompt from './components/ReloadPrompt.vue';
+
 import { mdiCalculatorVariant } from '@quasar/extras/mdi-v6';
 
 const appVersion = import.meta.env.VITE_APP_VERSION;
 
 export default defineComponent({
-  name: 'Root',
+  name: 'AppRoot',
+  components: {
+    ReloadPrompt,
+  },
   setup() {
     return {
       appVersion,
