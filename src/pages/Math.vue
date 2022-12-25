@@ -1,21 +1,16 @@
 <script lang="ts">
 import { defineComponent, ref, computed, watchEffect, nextTick } from 'vue';
 import { random, sum, reduce, shuffle, round, uniq } from 'lodash-es';
-import { mdiPlus, mdiEqual } from '@quasar/extras/mdi-v6';
+import { mdiEqual } from '@quasar/extras/mdi-v6';
+
+import MathOptions from '../components/MathOptions.vue';
+
 import { showConfetti } from '../lib/confetti';
 import { ringBells } from '../lib/bells';
 import { speak } from '../lib/speak';
 
-enum Operand {
-  SUM,
-  MULTIPLY,
-}
-
-enum GAME_STATE {
-  EMPTY,
-  CORRECT,
-  WRONG,
-}
+import { GameState, Operand, ICONS } from '../contracts/math';
+import { buildFraser } from '../lib/phrases';
 
 const MIN_OPTIONS = 2;
 const MAX_VALUE = 9;
@@ -39,28 +34,33 @@ const operations: Record<Operand, (vals: number[]) => number> = {
 
 export default defineComponent({
   name: 'Match',
+  components: { MathOptions },
   setup() {
     const $el = ref();
+    const editingOptions = ref(true);
     const size = ref(2);
     const input = ref<number | null>(null);
     const numbers = ref<number[]>([]);
     const tp = ref(Operand.SUM);
 
     const result = computed(() => operations[tp.value](numbers.value));
+    const fraser = computed(() => buildFraser(tp.value));
+    const opIcon = computed(() => ICONS[tp.value]);
+
     const STATE = computed(() => {
       if (input.value == null) {
-        return GAME_STATE.EMPTY;
+        return GameState.EMPTY;
       }
 
       if (input.value === result.value) {
-        return GAME_STATE.CORRECT;
+        return GameState.CORRECT;
       }
 
-      return GAME_STATE.WRONG;
+      return GameState.WRONG;
     });
 
-    const isWrong = computed(() => STATE.value === GAME_STATE.WRONG);
-    const isEmpty = computed(() => STATE.value === GAME_STATE.EMPTY);
+    const isWrong = computed(() => STATE.value === GameState.WRONG);
+    const isEmpty = computed(() => STATE.value === GameState.EMPTY);
 
     const colorStatus = computed(() => {
       if (isEmpty.value) {
@@ -91,6 +91,10 @@ export default defineComponent({
       input.value = val;
     };
 
+    const onOptionsChange = (opt: { operation: Operand }) => {
+      tp.value = opt.operation;
+    };
+
     watchEffect(() => {
       if (options.value.length < MIN_OPTIONS) {
         refresh();
@@ -98,25 +102,21 @@ export default defineComponent({
     });
 
     watchEffect(() => {
-      if (STATE.value === GAME_STATE.EMPTY) {
-        speak(`Quanto é ${numbers.value.join(' mais ')}?`);
+      if (STATE.value === GameState.EMPTY) {
+        speak(fraser.value.question(numbers.value));
         return;
       }
 
-      if (STATE.value === GAME_STATE.CORRECT) {
+      if (STATE.value === GameState.CORRECT) {
         nextTick(() => showConfetti($el.value.$el));
         nextTick(ringBells);
 
-        speak(`${numbers.value.join(' mais ')} é igual a ${result.value}`).then(
-          refresh
-        );
+        speak(fraser.value.correct(numbers.value, result.value)).then(refresh);
         return;
       }
 
       speak(
-        `${numbers.value.join(' mais ')} não é ${input.value}, o correto é ${
-          result.value
-        }`
+        fraser.value.wrong(numbers.value, result.value, input.value as number)
       ).then(refresh);
     });
 
@@ -127,13 +127,15 @@ export default defineComponent({
       defineInput,
       input,
       mdiEqual,
-      mdiPlus,
+      opIcon,
       numbers,
       options,
       result,
       size,
       isWrong,
       isEmpty,
+      editingOptions,
+      onOptionsChange,
       el: $el,
     };
   },
@@ -148,9 +150,9 @@ export default defineComponent({
     >
       <q-chip
         v-for="(num, i) in numbers"
-        size="2.23em"
+        size="2em"
         :key="`num-${i}`"
-        :icon="i > 0 ? mdiPlus : undefined"
+        :icon="i > 0 ? opIcon : undefined"
       >
         {{ num }}
       </q-chip>
@@ -177,5 +179,7 @@ export default defineComponent({
         @click="defineInput(val)"
       />
     </q-btn-group>
+
+    <MathOptions @save="onOptionsChange" v-model="editingOptions" />
   </q-page>
 </template>
