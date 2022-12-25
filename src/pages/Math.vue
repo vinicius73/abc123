@@ -17,7 +17,9 @@ const MAX_VALUE = 9;
 const HALF_VALUE = round(9 / 2);
 
 const buildNumbers = (size: number): number[] => {
-  return Array.from({ length: size }).map(() => random(1, MAX_VALUE, false));
+  return Array.from({ length: size })
+    .map(() => random(1, MAX_VALUE, false))
+    .sort();
 };
 
 const operations: Record<Operand, (vals: number[]) => number> = {
@@ -96,8 +98,8 @@ export default defineComponent({
     };
 
     const showOptions = () => {
-      editingOptions.value = true
-    }
+      editingOptions.value = true;
+    };
 
     watchEffect(() => {
       if (options.value.length < MIN_OPTIONS) {
