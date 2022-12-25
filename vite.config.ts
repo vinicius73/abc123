@@ -32,7 +32,7 @@ export default defineConfig({
         display: 'standalone',
         start_url: '/?pwa',
         description: 'Jogos educativos com números e letras',
-        background_color: '#2d2d2d',
+        background_color: '#FFF',
         theme_color: '#019d9c',
         lang: 'pt-BR',
         scope: '/',
