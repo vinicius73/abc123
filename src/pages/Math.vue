@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, watchEffect, nextTick } from 'vue';
 import { random, sum, reduce, shuffle, round, uniq } from 'lodash-es';
-import { mdiEqual } from '@quasar/extras/mdi-v6';
+import { mdiEqual, mdiCog } from '@quasar/extras/mdi-v6';
 
 import MathOptions from '../components/MathOptions.vue';
 
@@ -37,7 +37,7 @@ export default defineComponent({
   components: { MathOptions },
   setup() {
     const $el = ref();
-    const editingOptions = ref(true);
+    const editingOptions = ref(false);
     const size = ref(2);
     const input = ref<number | null>(null);
     const numbers = ref<number[]>([]);
@@ -95,6 +95,10 @@ export default defineComponent({
       tp.value = opt.operation;
     };
 
+    const showOptions = () => {
+      editingOptions.value = true
+    }
+
     watchEffect(() => {
       if (options.value.length < MIN_OPTIONS) {
         refresh();
@@ -127,6 +131,7 @@ export default defineComponent({
       defineInput,
       input,
       mdiEqual,
+      mdiCog,
       opIcon,
       numbers,
       options,
@@ -135,6 +140,7 @@ export default defineComponent({
       isWrong,
       isEmpty,
       editingOptions,
+      showOptions,
       onOptionsChange,
       el: $el,
     };
@@ -181,5 +187,9 @@ export default defineComponent({
     </q-btn-group>
 
     <MathOptions @save="onOptionsChange" v-model="editingOptions" />
+
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn @click="showOptions" fab :icon="mdiCog" color="accent" />
+    </q-page-sticky>
   </q-page>
 </template>
