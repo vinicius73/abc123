@@ -1,5 +1,4 @@
 import { mdiPlus, mdiMultiplication } from '@quasar/extras/mdi-v6';
-import { type Component } from 'vue';
 
 export enum Operand {
   SUM,

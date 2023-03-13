@@ -1,10 +1,10 @@
 import { Operand } from '../contracts/math';
 
-type Phraser = {
-  question(numbers: number[]): string;
-  correct(numbers: number[], result: number): string;
-  wrong(numbers: number[], result: number, input: number): string;
-};
+interface Phraser {
+  question: (numbers: number[]) => string;
+  correct: (numbers: number[], result: number) => string;
+  wrong: (numbers: number[], result: number, input: number) => string;
+}
 
 const sumPhrases: Phraser = {
   question: numbers => `Quanto é ${numbers.join(' mais ')}?`,

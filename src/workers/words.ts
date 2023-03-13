@@ -1,18 +1,19 @@
 import { sample } from 'lodash-es';
 import words from '../sources/words-simple.json';
 
-export type WordEvent = {
+export interface WordEvent {
   action: 'load-random-word';
-};
+}
 
-export type MessageWord = {
+export interface MessageWord {
   word: string;
-};
+}
 
-const randomWord = (): string => sample(words)!;
+const randomWord = (): string => sample(words) as string;
 
 self.addEventListener('message', (ev: MessageEvent<WordEvent>): void => {
   if (ev.data.action === 'load-random-word') {
-    self.postMessage({ word: randomWord() } as MessageWord);
+    const payload: MessageWord = { word: randomWord() };
+    self.postMessage(payload);
   }
 });

@@ -2,7 +2,7 @@
 import { useRegisterSW } from 'virtual:pwa-register/vue';
 const interval = 300000; // 5 minutes
 
-const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
+const { needRefresh, updateServiceWorker } = useRegisterSW({
   onRegistered(r) {
     if (!r) {
       return;
@@ -18,10 +18,10 @@ const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
   },
 });
 
-const close = async () => {
-  offlineReady.value = false;
-  needRefresh.value = false;
-};
+// const close = async () => {
+//   offlineReady.value = false;
+//   needRefresh.value = false;
+// };
 </script>
 
 <template>

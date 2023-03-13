@@ -35,7 +35,7 @@ const operations: Record<Operand, (vals: number[]) => number> = {
 };
 
 export default defineComponent({
-  name: 'Match',
+  name: 'MatchPage',
   components: { MathOptions },
   setup() {
     const $el = ref();

@@ -8,28 +8,28 @@ const words = new Worker(new URL('../workers/words.ts', import.meta.url), {
 
 export default defineComponent({
   name: 'PageAbc',
-  setup(props, ctx) {
+  setup() {
     const word = ref('--');
 
-    const onMessage = (ev: MessageEvent<MessageWord>) => {
+    const onMessage = (ev: MessageEvent<MessageWord>): void => {
       word.value = ev.data.word;
     };
 
     const reload = () => {
       words.postMessage({
-        action: 'load-random-word'
-      })
-    }
+        action: 'load-random-word',
+      });
+    };
 
     words.addEventListener('message', onMessage);
 
-    const interval = setInterval(reload, 5_000)
+    const interval = setInterval(reload, 5_000);
 
     onBeforeUnmount(() => {
+      // @ts-ignore
       words.removeEventListener('messsage', onMessage);
+      clearInterval(interval);
     });
-
-
 
     return {
       word,
