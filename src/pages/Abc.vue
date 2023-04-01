@@ -1,6 +1,7 @@
 <script lang="ts">
 import type { MessageWord } from '../workers/words';
-import { defineComponent, ref, onBeforeUnmount } from 'vue';
+import { defineComponent, ref, onBeforeUnmount, computed } from 'vue';
+import { separateSyllables } from '../lib/syllables';
 
 const words = new Worker(new URL('../workers/words.ts', import.meta.url), {
   type: 'module',
@@ -9,7 +10,9 @@ const words = new Worker(new URL('../workers/words.ts', import.meta.url), {
 export default defineComponent({
   name: 'PageAbc',
   setup() {
-    const word = ref('--');
+    const word = ref('');
+
+    const splited = computed(() => separateSyllables(word.value));
 
     const onMessage = (ev: MessageEvent<MessageWord>): void => {
       word.value = ev.data.word;
@@ -23,16 +26,16 @@ export default defineComponent({
 
     words.addEventListener('message', onMessage);
 
-    const interval = setInterval(reload, 5_000);
 
     onBeforeUnmount(() => {
       // @ts-ignore
       words.removeEventListener('messsage', onMessage);
-      clearInterval(interval);
     });
 
     return {
       word,
+      splited,
+      reload,
     };
   },
 });
@@ -41,5 +44,7 @@ export default defineComponent({
 <template>
   <q-page padding>
     <h1>{{ word }}</h1>
+    <h2>{{ splited }}</h2>
+    <button @click="reload">reload</button>
   </q-page>
 </template>

@@ -1,5 +1,5 @@
 import { sample } from 'lodash-es';
-import words from '../sources/words-simple.json';
+import words from '../sources/words-basic.json';
 
 export interface WordEvent {
   action: 'load-random-word';
